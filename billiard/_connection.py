@@ -24,7 +24,7 @@ from . import AuthenticationError
 from ._ext import _billiard, win32
 from .util import get_temp_dir, Finalize, sub_debug, debug
 from .forking import duplicate, close
-from .compat import bytes
+from .compat import bytes, _bytes as basebytes
 
 try:
     WindowsError = WindowsError  # noqa
@@ -123,7 +123,7 @@ class Listener(object):
         else:
             self._listener = SocketListener(address, family, backlog)
 
-        if authkey is not None and not isinstance(authkey, bytes):
+        if authkey is not None and not isinstance(authkey, basebytes):
             raise TypeError('authkey should be a byte string')
 
         self._authkey = authkey
@@ -170,7 +170,7 @@ def Client(address, family=None, authkey=None):
     else:
         c = SocketClient(address)
 
-    if authkey is not None and not isinstance(authkey, bytes):
+    if authkey is not None and not isinstance(authkey, basebytes):
         raise TypeError('authkey should be a byte string')
 
     if authkey is not None:
@@ -402,7 +402,7 @@ FAILURE = bytes('#FAILURE#', 'ascii')
 
 def deliver_challenge(connection, authkey):
     import hmac
-    assert isinstance(authkey, bytes)
+    assert isinstance(authkey, basebytes)
     message = os.urandom(MESSAGE_LENGTH)
     connection.send_bytes(CHALLENGE + message)
     digest = hmac.new(authkey, message).digest()
@@ -416,7 +416,7 @@ def deliver_challenge(connection, authkey):
 
 def answer_challenge(connection, authkey):
     import hmac
-    assert isinstance(authkey, bytes)
+    assert isinstance(authkey, basebytes)
     message = connection.recv_bytes(256)         # reject large message
     assert message[:len(CHALLENGE)] == CHALLENGE, 'message = %r' % message
     message = message[len(CHALLENGE):]
