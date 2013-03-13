@@ -1854,13 +1854,13 @@ class OtherTest(unittest.TestCase):
         class _FakeConnection(object):
 
             def recv_bytes(self, size):
-                return bytes('something bogus')
+                return bytes('something bogus', 'ascii')
 
             def send_bytes(self, data):
                 pass
         self.assertRaises(billiard.AuthenticationError,
                           billiard.connection.deliver_challenge,
-                          _FakeConnection(), bytes('abc'))
+                          _FakeConnection(), bytes('abc', 'ascii'))
 
     def test_answer_challenge_auth_failure(self):
 
@@ -1874,14 +1874,14 @@ class OtherTest(unittest.TestCase):
                 if self.count == 1:
                     return billiard.connection.CHALLENGE
                 elif self.count == 2:
-                    return bytes('something bogus')
+                    return bytes('something bogus', 'ascii')
                 return bytes('')
 
             def send_bytes(self, data):
                 pass
         self.assertRaises(billiard.AuthenticationError,
                           billiard.connection.answer_challenge,
-                          _FakeConnection(), bytes('abc'))
+                          _FakeConnection(), bytes('abc', 'ascii'))
 
 
 def initializer(ns):
