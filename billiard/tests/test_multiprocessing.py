@@ -24,10 +24,12 @@ import random
 import logging
 from nose import SkipTest
 try:
+    # Python2
     from test import test_support
+    from io import BytesIO as StringIO
 except ImportError:
     from test import support as test_support
-from io import BytesIO
+    from io import StringIO
 try:
     from billiard._ext import _billiard
 except ImportError:
@@ -521,12 +523,12 @@ class _TestQueue(BaseTestCase):
             self.skipTest("requires 'queue.task_done()' method")
 
         workers = [self.Process(target=self._test_task_done, args=(queue,))
-                   for i in xrange(4)]
+                   for i in range(4)]
 
         for p in workers:
             p.start()
 
-        for i in xrange(10):
+        for i in range(10):
             queue.put(i)
 
         queue.join()
@@ -697,11 +699,11 @@ class _TestCondition(BaseTestCase):
             t.start()
 
         # wait for them all to sleep
-        for i in xrange(6):
+        for i in range(6):
             sleeping.acquire()
 
         # check they have all timed out
-        for i in xrange(6):
+        for i in range(6):
             woken.acquire()
         self.assertReturnsIfImplemented(0, get_value, woken)
 
@@ -719,7 +721,7 @@ class _TestCondition(BaseTestCase):
             t.start()
 
         # wait for them to all sleep
-        for i in xrange(6):
+        for i in range(6):
             sleeping.acquire()
 
         # check no process/thread has woken up
@@ -1124,7 +1126,7 @@ class FooBar(object):
 
 
 def baz():
-    for i in xrange(10):
+    for i in range(10):
         yield i * i
 
 
@@ -1334,7 +1336,6 @@ class _TestConnection(BaseTestCase):
 
         self.assertEqual(poll(TIMEOUT1), False)
         self.assertTimingAlmostEqual(poll.elapsed, TIMEOUT1)
-
         conn.send(None)
 
         self.assertEqual(poll(TIMEOUT1), True)
@@ -1535,7 +1536,7 @@ class _TestHeap(BaseTestCase):
         blocks = []
 
         # create and destroy lots of blocks of different sizes
-        for i in xrange(iterations):
+        for i in range(iterations):
             size = int(random.lognormvariate(0, 1) * 1000)
             b = billiard.heap.BufferWrapper(size)
             blocks.append(b)
