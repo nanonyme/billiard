@@ -7,8 +7,14 @@ from __future__ import with_statement
 # Unit tests for the multiprocessing package
 #
 
-import unittest
-import Queue
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
 import time
 import sys
 import os
@@ -17,8 +23,11 @@ import array
 import random
 import logging
 from nose import SkipTest
-from test import test_support
-from StringIO import StringIO
+try:
+    from test import test_support
+except ImportError:
+    from test import support as test_support
+from io import BytesIO
 try:
     from billiard._ext import _billiard
 except ImportError:
@@ -1093,8 +1102,8 @@ class _TestZZZNumberOfObjects(BaseTestCase):
         refs = self.manager._number_of_objects()
         debug_info = self.manager._debug_info()
         if refs != EXPECTED_NUMBER:
-            print self.manager._debug_info()
-            print debug_info
+            print (self.manager._debug_info())
+            print (debug_info)
 
         self.assertEqual(refs, EXPECTED_NUMBER)
 

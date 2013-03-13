@@ -159,6 +159,7 @@ else:
 long_description = open(os.path.join(HERE, 'README.rst')).read()
 long_description += """
 
+
 ===========
 Changes
 ===========
@@ -166,6 +167,9 @@ Changes
 """
 long_description += open(os.path.join(HERE, 'CHANGES.txt')).read()
 
+tests_require = ['nose', 'nose-cover3']
+if sys.version_info < (2, 7):
+    tests_require.append("unittest2")
 
 def run_setup(with_extensions=True):
     extensions = []
@@ -194,7 +198,7 @@ def run_setup(with_extensions=True):
         url=meta['homepage'],
         zip_safe=False,
         license='BSD',
-        tests_require=['nose', 'nose-cover3'],
+        tests_require=tests_require,
         test_suite='nose.collector',
         classifiers=[
             'Development Status :: 5 - Production/Stable',
